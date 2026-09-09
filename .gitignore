@@ -31,3 +31,11 @@ yarn-error.log*
 .env.*.local
 *.local
 .vercel
+
+# Android & Gradle
+.gradle/
+**/.gradle/
+local.properties
+**/local.properties
+build/
+**/build/
