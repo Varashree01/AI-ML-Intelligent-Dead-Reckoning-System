@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd \"SIH SOL/SIH SOL\" && npm install && npm run build",
+  "outputDirectory": "SIH SOL/SIH SOL/dist",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

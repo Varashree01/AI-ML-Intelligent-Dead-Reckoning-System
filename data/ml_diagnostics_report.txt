@@ -1,0 +1,63 @@
+ML DIAGNOSTICS REPORT
+================================================================================
+A. DATASET HEALTH
+Rows in ml_training_dataset.csv: 600
+Feature columns: 164
+Missing feature/target values: 0
+Time range: 60.100000..119.999000 seconds
+B. TARGET STATISTICS
+target_dx: min=-28.307169, max=88.033212, mean=26.818896, median=18.580035, std=43.048161, p1=-28.231742, p5=-26.788573, p25=-16.918540, p50=18.580035, p75=73.100551, p95=87.242836, p99=87.988719
+target_dy: min=-330.780827, max=24.803512, mean=-64.923445, median=-21.799469, std=99.274703, p1=-321.249804, p5=-277.938379, p25=-128.071876, p50=-21.799469, p75=17.813855, p95=24.540745, p99=24.745428
+C. TARGET BEHAVIOR OVER TIME
+Targets are evaluated as accumulated baseline-to-reference corrections at each window end.
+D. BASELINE ERROR GROWTH
+Approximately 10s into outage (sample 69.999s): error=31.575791m
+Approximately 20s into outage (sample 79.999s): error=32.585742m
+Approximately 30s into outage (sample 89.999s): error=28.261248m
+Approximately 40s into outage (sample 99.999s): error=114.523111m
+Approximately 50s into outage (sample 110.000s): error=195.819335m
+Approximately 60s into outage (sample 119.999s): error=333.206712m
+Accumulated error magnitude: mean=91.593102, final=333.206712
+Local one-sample correction magnitude: mean=0.744421, median=0.733533, max=2.042726
+The full target magnitude is substantially accumulated over time; local changes are a separate, smaller signal suitable for incremental correction experiments.
+E. FEATURE-TARGET CORRELATIONS
+Strongest absolute Pearson correlations:
+MAG_Z_max -> target_dy: r=-0.918105
+MAG_Z_rms -> target_dy: r=-0.916994
+MAG_Z_mean -> target_dy: r=-0.916509
+MAG_Z_first -> target_dy: r=-0.907312
+MAG_Z_min -> target_dy: r=-0.902025
+MAG_Z_last -> target_dy: r=-0.899185
+MAG_X_last -> target_dy: r=-0.865820
+MAG_X_max -> target_dy: r=-0.859862
+MAG_X_mean -> target_dy: r=-0.854555
+MAG_X_rms -> target_dy: r=0.853618
+OR_R_rms -> target_dy: r=-0.852167
+MAG_X_min -> target_dy: r=-0.826603
+MAG_X_first -> target_dy: r=-0.804446
+gyro_mag_max -> target_dy: r=-0.762428
+gyro_mag_std -> target_dy: r=-0.755708
+F. SPLIT INTEGRITY
+train: 60.100000..102.000000
+validation: 102.100000..110.999000
+test: 111.100000..119.999000
+time ranges non-overlap: PASS
+duplicate timestamps: PASS (0)
+duplicate feature rows across splits: PASS
+causal windows cross split boundaries: FAIL (validation, test)
+G. BASELINE IMPLEMENTATION FINDINGS
+gps_denied_imu_baseline.py:
+- Coordinate frame: longitude-derived East and latitude-derived North ENU using local equirectangular approximation.
+- Heading convention: compass degrees, converted to ENU velocity as East=speed*sin(heading), North=speed*cos(heading).
+- Acceleration frame: phone accelerometer minus phone gravity, then scipy Rotation.from_euler('ZYX', azimuth, pitch, roll).
+- Integration: forward Euler velocity update followed by forward Euler position update at each smartphone timestamp.
+- Initial state: last pre-outage vehicle speed, heading, and interpolated position at the first outage sample.
+- Source locations: gravity removal line 138; Euler rotation line 108; integration line 156; initial state line 124; position line 149; reference line 126.
+- Orientation issue: pitch is near -80 degrees and roll spans roughly -180..180 degrees; the baseline uses recorded values without correction. Gyroscope is loaded but not integrated.
+gps_denied_baseline_v2.py:
+- V2 default is not an IMU-only baseline: it uses vehicle heading and indicated vehicle speed in velocity propagation.
+- V2 source locations: vehicle-heading selection line 103; speed interpolation line 109; propagation line 128.
+H. RECOMMENDED NEXT ML FORMULATION
+Recommendation: E. Hybrid physics + ML residual correction, beginning with incremental position correction (delta_correction_x/y) and causal windows.
+Reason: the current targets encode accumulated inertial drift and are strongly time-dependent, while one-step local changes are more stationary. Preserve the physics baseline, train residual corrections causally, and discard the first window_size-1 rows of every split so windows cannot cross boundaries.
+This is a diagnostic recommendation, not a final navigation model.

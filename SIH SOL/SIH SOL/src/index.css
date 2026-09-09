@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #070b14;
+  --bg-secondary: #0f172a;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --bg-card-solid: #0f172a;
+  --border-color: rgba(56, 189, 248, 0.15);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-blue: #38bdf8;
+  --accent-navy: #0284c7;
+  --glass-hud-bg: rgba(15, 23, 42, 0.85);
+  --glass-hud-border: rgba(255, 255, 255, 0.12);
+  --shadow-hud: 0 12px 32px 0 rgba(0, 0, 0, 0.45);
+}
+
+.light {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-solid: #ffffff;
+  --border-color: rgba(15, 23, 42, 0.1);
+  --border-subtle: rgba(15, 23, 42, 0.06);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --accent-blue: #0284c7;
+  --accent-navy: #0369a1;
+  --glass-hud-bg: rgba(255, 255, 255, 0.92);
+  --glass-hud-border: rgba(15, 23, 42, 0.12);
+  --shadow-hud: 0 12px 32px 0 rgba(15, 23, 42, 0.12);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.25s ease, color 0.25s ease;
+  overflow-x: hidden;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Glassmorphism Depth Hierarchy */
+/* Level 1: Normal Surface */
+.surface-level-1 {
+  background: var(--bg-card-solid);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Level 2: Elevated Card */
+.surface-level-2 {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Level 3: Floating Glass HUD Overlay */
+.glass-hud-overlay {
+  background: var(--glass-hud-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-hud-border);
+  box-shadow: var(--shadow-hud);
+}
+
+/* Transitions */
+.transition-smooth {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Map Markers */
+.custom-gps-marker {
+  width: 24px;
+  height: 24px;
+  background-color: #2563eb;
+  border: 2.5px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.5);
+  position: relative;
+}
+
+.custom-dr-marker {
+  width: 24px;
+  height: 24px;
+  background-color: #d97706;
+  border: 2.5px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.5);
+  position: relative;
+}
+
+.custom-ai-marker {
+  width: 24px;
+  height: 24px;
+  background-color: #10b981;
+  border: 2.5px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
+  position: relative;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 3px;
+  opacity: 0.5;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+}
+
+/* Leaflet Overrides */
+.leaflet-container {
+  font-family: inherit !important;
+  background: #0f172a !important;
+}
+
+.light .leaflet-container {
+  background: #f1f5f9 !important;
+}
+
+.leaflet-control-zoom a {
+  background-color: var(--glass-hud-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--glass-hud-border) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--glass-hud-bg) !important;
+  color: var(--text-primary) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--glass-hud-border) !important;
+  border-radius: 12px !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--glass-hud-bg) !important;
+}

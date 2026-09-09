@@ -1,0 +1,13 @@
+{
+  "model": "RandomForestRegressor",
+  "evaluation": "held_out_test_set",
+  "train_fraction": 0.8,
+  "test_fraction": 0.2,
+  "mae_mps": 0.1649787629712183,
+  "rmse_mps": 0.19163949744640982,
+  "training_samples": 4160,
+  "testing_samples": 1040,
+  "features_per_sample": 13,
+  "ground_truth_used_for_training_target": true,
+  "ground_truth_used_for_inference_features": false
+}
